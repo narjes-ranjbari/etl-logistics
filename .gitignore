@@ -1,0 +1,7 @@
+*.log
+config.py
+city_report.csv
+monthly_report.csv
+top_customers.csv
+__pycache__/
+*.pyc
