@@ -18,15 +18,15 @@ def connect_to_db():
         )
     except OperationalError as e :
         logging.error(f"SQL connection error : {e}")
-    logging.info("Connected to database")
+    logging.info("Connected to database successfully")
     return engine
 
 def read_from_db(engine):
     try:
         customers = pd.read_sql('SELECT * FROM customers', engine)
-        logging.info('Fetch data from customers table')
+        logging.info('Customers data fetched successfully')
         orders = pd.read_sql('SELECT * FROM orders', engine)
-        logging.info('Fetch data from orders table')
+        logging.info('Orders data fetched successfully')
     except OperationalError as e :
         logging.error(f"SQL connection error : {e}")
     except ProgrammingError as e :
@@ -42,7 +42,7 @@ def read_from_csv(file):
     except pd.errors.EmptyDataError as e :
         logging.error(e)
         return None
-    logging.info('shipping cost file reded')
+    logging.info('Shipping cost file read successfully')
     return df
 
 
@@ -58,7 +58,7 @@ def get_rate_from_url(url):
     except requests.HTTPError as e:
         logging.error(f'HTTP error: {e}')
         return None
-    logging.info(f'the exchange rate is {irr_rate}')
+    logging.info(f'Exchange rate fetched {irr_rate} IRR')
     return irr_rate
 
 def filtered_cancelled_orders(orders):
@@ -67,7 +67,7 @@ def filtered_cancelled_orders(orders):
     except KeyError as e :
         logging.error(e)
         None
-    logging.info("orders filtered out by cancelled")
+    logging.info("Cancelled orders fetched successfully")
     return orders
 
 def fill_missing_email(customers):
@@ -76,15 +76,15 @@ def fill_missing_email(customers):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('missing emails filled with unknown@email.com')
+    logging.info('Missing emails filled with unknown@email.com')
     return customers
 
 def merge_sources(customers, orders, shipping_costs):
     try :
         merge1 = customers.merge(orders, left_on='customer_id', right_on='customer_id')
-        logging.info('customers tables merged with orders table')
+        logging.info('Customers merged with orders successfully')
         merge2 = merge1.merge(shipping_costs, left_on='city', right_on='city')
-        logging.info('Merged tables merged with shipping_costs data')
+        logging.info('Merged data combined with shipping costs successfully')
     except KeyError as e :
         logging.error(f'Key error : {e}')
     return merge2
@@ -95,7 +95,7 @@ def create_new_column_total_cost(merged_data):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('new column total_cost added to data')
+    logging.info('Column total_cost created successfully')
     return merged_data
 
 def new_column_total_cost_usd(data, irr_rate):
@@ -107,7 +107,7 @@ def new_column_total_cost_usd(data, irr_rate):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('new column total_cost added to data')
+    logging.info('Column total_cost_usd created successfully')
     return data
 
 def create_month_column(data):
@@ -117,7 +117,7 @@ def create_month_column(data):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('month column added to data')
+    logging.info('Month column extracted successfully')
     return data
     
 def group_by_city_report(data):
@@ -127,7 +127,7 @@ def group_by_city_report(data):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('total_cost grouped by city')
+    logging.info('City revenue report created successfully')
     return data
 
 def group_by_month_report(data):
@@ -137,7 +137,7 @@ def group_by_month_report(data):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('total_cost grouped by month')
+    logging.info('Monthly revenue report created successfully')
     return data
 def top_3_customers(data):
     try :
@@ -145,7 +145,7 @@ def top_3_customers(data):
     except KeyError as e :
         logging.error(e)
         return None
-    logging.info('top 3 customer founded')
+    logging.info('Top 3 customers identified successfully')
     return result[['name', 'total_cost']]
 
 def csv_reports(city_report, top_customers, monthly_report, paths):
